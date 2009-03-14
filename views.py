@@ -1,5 +1,6 @@
 # imports # {{{ 
 from django.http import HttpResponseRedirect
+from django.conf import settings
 
 import urllib
 import atom
@@ -33,7 +34,7 @@ def return_(request):
     gd_client.UpgradeToSessionToken(token)
 
     query = gdata.contacts.service.ContactsQuery()
-    query.max_result = 500 # still only returning 25
+    query.max_results = getattr(settings, "DGCI_MAX_CONTACTS", 100)
     feed = gd_client.GetContactsFeed(query.ToUri())
 
     request.session["dgci_contact_feed"] = feed
